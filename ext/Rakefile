@@ -13,7 +13,7 @@ task :default => :clean do
   if ENV.fetch('RDKAFKA_EXT_PATH', '').empty?
     # Download and compile librdkafka if RDKAFKA_EXT_PATH is not set
     require "mini_portile2"
-    recipe = MiniPortile.new("librdkafka", Rdkafka::LIBRDKAFKA_VERSION)
+    recipe = MiniPortile.new("librdkafka", Rdkafka::LIBRDKAFKA_VERSION, make_command: "gmake")
 
     # Use default homebrew openssl if we're on mac and the directory exists
     # and each of flags is not empty
@@ -77,7 +77,7 @@ namespace :build do
     ref = args[:ref]
     version = "git-#{ref}"
 
-    recipe = MiniPortile.new("librdkafka", version)
+    recipe = MiniPortile.new("librdkafka", version, make_command: "gmake")
     recipe.files << "https://github.com/edenhill/librdkafka/archive/#{ref}.tar.gz"
     recipe.configure_options = ["--host=#{recipe.host}","--enable-static", "--enable-zstd"]
     recipe.cook
